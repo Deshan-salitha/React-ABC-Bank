@@ -1,14 +1,16 @@
 import './css/Login.css';
 // import{handleAuth} from "./fetching/AuthFetch";
 import { useState } from "react";
-import { useNavigate } from 'react-router-dom';
+// import { useNavigate } from 'react-router-dom';
+import { useNavigate } from "react-router-dom";
 
 const Login = () => {
     const [userEmail, setEmail] = useState('');
     const [password, setPassword] = useState('');
     // const [isPending, setIsPending] = useState(false);
-    // const history = useHistory();
-    // const navigate = useNavigate();
+    // const history = useNavigate();
+    const navigate = useNavigate();
+    const jsonauthres = {};
 
     const handleAuth = (e) => {
         // console.log("hi")
@@ -20,10 +22,12 @@ const Login = () => {
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(auth)
         }).then((response) => {
-            response.json()
-            console.log(response.data.jwt)
-            localStorage.setItem('auth',JSON.stringify(response))
-            // navigate('/home')
+            
+            console.log(response.json())
+            // jsonauthres = JSON.stringify(response)
+            localStorage.setItem('auth',response)
+            // history.push('/');
+            navigate('/home')
         }
             //     ()=>{
 
