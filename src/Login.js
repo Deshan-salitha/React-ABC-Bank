@@ -1,7 +1,8 @@
 import './css/Login.css';
 // import{handleAuth} from "./fetching/AuthFetch";
 import { useState } from "react";
-import { useNavigate } from 'react-router-dom';
+// import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
 
 const Login = () => {
     const [userEmail, setEmail] = useState('');
@@ -9,28 +10,20 @@ const Login = () => {
     // const [isPending, setIsPending] = useState(false);
     // const history = useHistory();
     // const navigate = useNavigate();
-
+// 
     const handleAuth = (e) => {
-        // console.log("hi")
-        e.preventDefault();
-        const auth = { userEmail, password };
-        // setIsPending(true);
-        fetch('http://localhost:8080/authenticate', {
-            method: 'POST',
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(auth)
-        }).then((response) => {
-            response.json()
-            console.log(response.data.jwt)
-            localStorage.setItem('auth',JSON.stringify(response))
-            // navigate('/home')
-        }
-            //     ()=>{
-
-            //     console.log("Welsome!!!!!!!!!!!")
-            //     // setIsPending(false)
-            // }
-        );
+        // const login = (userEmail,password)=>{
+             axios
+            .post("http://localhost:8080/authenticate",{
+                userEmail,
+                password
+            }).then((response)=>{
+                if(response.data.jwt){
+                    localStorage.setItem("jwt",JSON.stringify(response.data.body.jwt));
+                    console.log(response.data.body.jwt);
+                }
+            })
+        // }
     }
     return (
         <div className="flex flex-row">
