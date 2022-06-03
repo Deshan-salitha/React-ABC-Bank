@@ -1,8 +1,9 @@
 import './css/Login.css';
 // import{handleAuth} from "./fetching/AuthFetch";
 import { useState } from "react";
-// import { useNavigate } from 'react-router-dom';
-import { useNavigate } from "react-router-dom";
+import { useNavigate } from 'react-router-dom';
+// import { useNavigate } from "react-router-dom";
+import axios from 'axios';
 
 const Login = () => {
     const [userEmail, setEmail] = useState('');
@@ -10,31 +11,47 @@ const Login = () => {
     // const [isPending, setIsPending] = useState(false);
     // const history = useNavigate();
     const navigate = useNavigate();
-    const jsonauthres = {};
+    // const jsonauthres = {};
 
     const handleAuth = (e) => {
-        // console.log("hi")
-        e.preventDefault();
-        const auth = { userEmail, password };
-        // setIsPending(true);
-        fetch('http://localhost:8080/authenticate', {
-            method: 'POST',
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(auth)
-        }).then((response) => {
-            
-            console.log(response.json())
-            // jsonauthres = JSON.stringify(response)
-            localStorage.setItem('auth',response)
-            // history.push('/');
-            navigate('/home')
-        }
-            //     ()=>{
+        console.log("login data", userEmail)
+        const url = 'http://localhost:8080/authenticate'
+        axios.post(url, {
+            userEmail: userEmail,
+            password: password
+        }).then((res) => {
+            console.log("response", res.data.body.jwt)
+            console.log("user", res.data.body.user.uFName)
+            localStorage.setItem('jwt', res.data.body.jwt)
+            localStorage.setItem('user', res.data.body.user.uFName)
+            localStorage.setItem('userid', res.data.body.user.uID)
+            if (res.data.body.user.userType == 'admin') {
+                console.log("type: Admin")
+                navigate("/home");
+                // navigator('/home')
+            } else if (res.data.body.user.userType == 'employee') {
+                console.log("type: employee")
+            } else if (res.data.body.user.userType == 'customer') {
+                console.log("type: customer")
+            } else {
+                console.log("type: invalid")
+            }
+            // navigator("/home")
 
-            //     console.log("Welsome!!!!!!!!!!!")
-            //     // setIsPending(false)
-            // }
-        );
+        })
+    }
+    const getuser = (e) => {
+
+        axios.get('http://localhost:8080/allusers').then(function (response) {
+
+            // response.forEach((el)=>{
+            //     console.log(el)
+            // })
+            console.log(response.data);
+            localStorage.setItem('auth', JSON.stringify(response))
+            // navigator("/home");
+
+        })
     }
     return (
         <div className="flex flex-row">
@@ -48,8 +65,8 @@ const Login = () => {
                     <p className="login-description">Secure, convenient banking anytime</p>
                 </div>
                 <div className='container object-center py-80 px-4 w-full  space-y-8 flex flex-col items-center'>
-                    <form className="mt-8 space-y-6" onSubmit={handleAuth}>
-                        <input type="hidden" name="remember" defaultValue="true" />
+                    <form className="mt-8 space-y-6" method="post" onSubmit={handleAuth}>
+                        {/* <input type="hidden" name="remember" defaultValue="true" /> */}
                         {/* <div className="rounded-md w-full shadow-sm "> */}
                         <div className='w-full'>
                             <label htmlFor="email-address" className="sr-only">
@@ -86,7 +103,8 @@ const Login = () => {
 
                         <div className='items-center'>
                             <button
-                                // type="submit"
+                                type="button"
+                                onClick={() => handleAuth()}
                                 className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
                             >
                                 <span className="absolute left-0 inset-y-0 flex items-center pl-3">
@@ -95,15 +113,16 @@ const Login = () => {
                                 Sign in
                             </button>
                             <br></br>
-                            {/* <button
-                                type="submit"
+                            <button
+                                // type="submit"
                                 className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                                onClick={getuser}
                             >
                                 <span className="absolute left-0 inset-y-0 flex items-center pl-3">
-                                    
+
                                 </span>
                                 Register
-                            </button> */}
+                            </button>
                         </div>
                     </form>
                 </div>
