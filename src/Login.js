@@ -1,14 +1,19 @@
 import './css/Login.css';
 // import{handleAuth} from "./fetching/AuthFetch";
 import { useState } from "react";
+<<<<<<< HEAD
 import { useNavigate } from 'react-router-dom';
 // import { useNavigate } from "react-router-dom";
+=======
+// import { useNavigate } from 'react-router-dom';
+>>>>>>> 6e0a186f864a98d88588c2b5b161792de5c36e00
 import axios from 'axios';
 
 const Login = () => {
     const [userEmail, setEmail] = useState('');
     const [password, setPassword] = useState('');
     // const [isPending, setIsPending] = useState(false);
+<<<<<<< HEAD
     // const history = useNavigate();
     const navigate = useNavigate();
     // const jsonauthres = {};
@@ -52,6 +57,24 @@ const Login = () => {
             // navigator("/home");
 
         })
+=======
+    // const history = useHistory();
+    // const navigate = useNavigate();
+// 
+    const handleAuth = (e) => {
+        // const login = (userEmail,password)=>{
+             axios
+            .post("http://localhost:8080/authenticate",{
+                userEmail,
+                password
+            }).then((response)=>{
+                if(response.data.jwt){
+                    localStorage.setItem("jwt",JSON.stringify(response.data.body.jwt));
+                    console.log(response.data.body.jwt);
+                }
+            })
+        // }
+>>>>>>> 6e0a186f864a98d88588c2b5b161792de5c36e00
     }
     return (
         <div className="flex flex-row">
